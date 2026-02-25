@@ -139,6 +139,30 @@ document.addEventListener('DOMContentLoaded', () => {
     return bar;
   }
 
+  // --- Detect touch device ---
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+  // --- Mobile: auto-play videos on scroll into view ---
+  if (isTouchDevice) {
+    const mobileObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target.querySelector('.project__video');
+        if (!video) return;
+        if (entry.isIntersecting) {
+          video.muted = true;
+          video.play().catch(() => { });
+        } else {
+          // Only pause if not in detail-open mode
+          if (!entry.target.classList.contains('detail-open')) {
+            video.pause();
+          }
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.project').forEach(p => mobileObserver.observe(p));
+  }
+
   // --- Project Detail Panel & Video Hybrid Audio Logic ---
   document.querySelectorAll('.project').forEach(project => {
     const video = project.querySelector('.project__video');
@@ -193,13 +217,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // --- Seek logic (click & drag) ---
+    // --- Seek logic (click & drag + touch) ---
     if (trackEl && video) {
       let isSeeking = false;
 
       function seekToPosition(e) {
         const rect = trackEl.getBoundingClientRect();
-        let pct = (e.clientX - rect.left) / rect.width;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        let pct = (clientX - rect.left) / rect.width;
         pct = Math.max(0, Math.min(1, pct));
         video.currentTime = pct * (video.duration || 0);
         updateProgress();
@@ -218,6 +243,23 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       document.addEventListener('mouseup', () => {
+        isSeeking = false;
+      });
+
+      // Touch seek support
+      trackEl.addEventListener('touchstart', (e) => {
+        e.stopPropagation();
+        isSeeking = true;
+        seekToPosition(e);
+      }, { passive: false });
+
+      document.addEventListener('touchmove', (e) => {
+        if (isSeeking) {
+          seekToPosition(e);
+        }
+      }, { passive: true });
+
+      document.addEventListener('touchend', () => {
         isSeeking = false;
       });
 
@@ -247,27 +289,29 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Hover: Play muted (only when not detail-open)
-    project.addEventListener('mouseenter', () => {
-      if (video) {
-        if (!project.classList.contains('detail-open')) {
-          video.muted = true;
+    // Hover: Play muted (only when not detail-open) — desktop only
+    if (!isTouchDevice) {
+      project.addEventListener('mouseenter', () => {
+        if (video) {
+          if (!project.classList.contains('detail-open')) {
+            video.muted = true;
+          }
+          video.play().catch(err => console.log("Auto-play blocked or failed", err));
         }
-        video.play().catch(err => console.log("Auto-play blocked or failed", err));
-      }
-    });
+      });
 
-    project.addEventListener('mouseleave', () => {
-      if (video) {
-        if (!project.classList.contains('detail-open')) {
-          video.pause();
+      project.addEventListener('mouseleave', () => {
+        if (video) {
+          if (!project.classList.contains('detail-open')) {
+            video.pause();
+          }
         }
-      }
-      // Hide detail when mouse leaves entirely
-      if (project.classList.contains('detail-open') && detail.classList.contains('active')) {
-        detail.classList.remove('active');
-      }
-    });
+        // Hide detail when mouse leaves entirely
+        if (project.classList.contains('detail-open') && detail.classList.contains('active')) {
+          detail.classList.remove('active');
+        }
+      });
+    }
 
     // Click: Restart, Unmute, and activate project
     project.addEventListener('click', (e) => {

@@ -740,6 +740,19 @@ iframe {
     padding: 2rem 1.5rem;
   }
 
+  /* --- Mobile / Touch: show videos & titles without hover --- */
+  .project {
+    cursor: default;
+  }
+
+  .project__video {
+    filter: grayscale(0);
+  }
+
+  .project__overlay {
+    opacity: 1;
+  }
+
   .about {
     padding: 5rem 1.5rem;
   }
