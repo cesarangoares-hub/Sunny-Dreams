@@ -1,0 +1,818 @@
+/* ========================================================================
+   SUNNY DREAMS — Portfolio
+   Industrial B&W — Asymmetric — Typographic
+   ======================================================================== */
+
+/* ============================================================
+   PRELOADER — Title rises to header
+   ============================================================ */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease 0.1s, visibility 0.6s ease 0.1s;
+}
+
+.preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader__title {
+  font-family: var(--font);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.3),
+    0 0 30px rgba(255, 255, 255, 0.15),
+    0 -2px 15px rgba(255, 255, 255, 0.2),
+    0 -4px 40px rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  animation: preloaderFadeIn 0.8s ease 0.3s forwards;
+}
+
+.preloader__title.fade-out {
+  animation: preloaderFadeOut 1s ease forwards;
+}
+
+@keyframes preloaderFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes preloaderFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Page content blur transition */
+.page-content {
+  transition: filter 1s ease, opacity 1s ease;
+}
+
+.page-content.blurred {
+  filter: blur(12px) brightness(0.5);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --- Reset & Base --- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --black: #000000;
+  --white: #ffffff;
+  --gray-100: #f5f5f5;
+  --gray-200: #e0e0e0;
+  --gray-400: #999999;
+  --gray-600: #666666;
+  --gray-800: #222222;
+  --gray-900: #111111;
+  --font: Arial, Helvetica, sans-serif;
+  --transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-fast: 0.15s ease;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font);
+  background-color: var(--black);
+  color: var(--white);
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+video,
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+/* --- Reveal --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   NAVIGATION — Minimal, centered
+   ============================================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.8rem 3rem;
+  background: transparent;
+  transition: background var(--transition), padding var(--transition);
+}
+
+.nav--scrolled {
+  background: transparent;
+  padding: 1rem 3rem;
+}
+
+.nav__logo {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--white);
+  position: relative;
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.3),
+    0 0 30px rgba(255, 255, 255, 0.15),
+    0 -2px 15px rgba(255, 255, 255, 0.2),
+    0 -4px 40px rgba(255, 255, 255, 0.08);
+  transition: text-shadow var(--transition), opacity var(--transition-fast);
+}
+
+.nav__logo:hover {
+  opacity: 0.8;
+  text-shadow:
+    0 0 15px rgba(255, 255, 255, 0.5),
+    0 0 40px rgba(255, 255, 255, 0.25),
+    0 -3px 20px rgba(255, 255, 255, 0.35),
+    0 -6px 60px rgba(255, 255, 255, 0.12);
+}
+
+/* ============================================================
+   PROJECTS — Asymmetric grid with varied sizes
+   ============================================================ */
+.projects {
+  padding-top: 0;
+}
+
+.projects__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+/* Asymmetric: make some items span full width or different ratios */
+.project:nth-child(1),
+.project:nth-child(4),
+.project:nth-child(7) {
+  grid-column: 1 / -1;
+}
+
+.project {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='14'%3E%3Ctext x='0' y='11' font-family='Arial,sans-serif' font-size='9' font-weight='700' letter-spacing='2' fill='white'%3ECLICK TO HEAR%3C/text%3E%3C/svg%3E") 50 7, pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.project.detail-open {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Ccircle cx='5' cy='5' r='5' fill='white'/%3E%3C/svg%3E") 5 5, pointer;
+}
+
+.project__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #000;
+}
+
+.project__video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  filter: grayscale(1);
+  transition: filter 0.6s ease;
+}
+
+.project:hover .project__video {
+  filter: grayscale(0);
+}
+
+.project.detail-open .project__video {
+  filter: grayscale(0);
+}
+
+/* Full-width items get cinematic ratio */
+.project:nth-child(1) .project__media,
+.project:nth-child(4) .project__media,
+.project:nth-child(7) .project__media {
+  aspect-ratio: 21 / 9;
+}
+
+.project__thumbnail {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: grayscale(100%);
+}
+
+.project:hover .project__thumbnail {
+  transform: scale(1.04);
+}
+
+.project__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+  opacity: 0;
+  transition: opacity var(--transition);
+  padding: 2rem 2.5rem;
+}
+
+.project:hover .project__overlay {
+  opacity: 1;
+}
+
+/* Hide category text (Short Film, etc.) on hover — only show on click */
+.project__overlay .project__meta {
+  display: none;
+}
+
+.project__info {
+  text-align: left;
+}
+
+
+.project__title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+/* All titles use uniform base style */
+/* Slightly larger for full-width projects */
+.project:nth-child(1) .project__title,
+.project:nth-child(4) .project__title,
+.project:nth-child(7) .project__title {
+  font-size: 2.2rem;
+}
+
+.project__meta {
+  font-size: 0.65rem;
+  color: var(--gray-400);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+}
+
+/* --- Project Detail Panel (overlay inside media) --- */
+.project__detail {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+  padding: 4rem 3rem 2.5rem;
+  transform: translateY(100%);
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.7s ease;
+  opacity: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.project__detail.active {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* When detail is open, hide the hover overlay */
+.project__detail.active~.project__overlay,
+.project.detail-open .project__overlay {
+  opacity: 0 !important;
+}
+
+.project__detail-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.2rem;
+}
+
+.project__detail-type {
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gray-400);
+  margin-bottom: 1rem;
+}
+
+.project__detail-desc {
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: var(--gray-200);
+  max-width: 500px;
+}
+
+/* Close button removed as per user request */
+
+.project__detail-close:hover {
+  color: var(--white);
+}
+
+/* --- Playback Progress Bar (industrial) --- */
+.project__playback {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.2rem;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
+  pointer-events: none;
+}
+
+.project__detail.active .project__playback {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.project__playback-time {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: var(--gray-400);
+  min-width: 3.2rem;
+  user-select: none;
+}
+
+.project__playback-time--end {
+  text-align: right;
+}
+
+.project__playback-track {
+  position: relative;
+  flex: 1;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.project__playback-rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.project__playback-fill {
+  position: absolute;
+  left: 0;
+  height: 1px;
+  width: 0%;
+  background: var(--white);
+  transition: none;
+}
+
+.project__playback-thumb {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: var(--white);
+  left: 0%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: box-shadow 0.2s ease;
+}
+
+.project__playback-track:hover .project__playback-thumb {
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.project__playback-track:hover .project__playback-rail {
+  height: 2px;
+}
+
+.project__playback-track:hover .project__playback-fill {
+  height: 2px;
+}
+
+/* ============================================================
+   ABOUT — Asymmetric text layout
+   ============================================================ */
+.about {
+  padding: 8rem 3rem;
+  background: var(--gray-900);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.about__container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--gray-400);
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+.about__bio {
+  font-size: 1.4rem;
+  line-height: 1.7;
+  color: var(--gray-200);
+  margin-bottom: 1.5rem;
+  font-weight: 300;
+}
+
+.about__bio strong {
+  color: var(--white);
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+.about__stats {
+  display: flex;
+  gap: 5rem;
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.stat {
+  text-align: left;
+}
+
+.stat__number {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--white);
+  display: inline;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.stat__plus {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: var(--gray-400);
+}
+
+.stat__label {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray-600);
+}
+
+/* ============================================================
+   CONTACT — Asymmetric split layout, industrial
+   ============================================================ */
+.contact {
+  padding: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+.contact__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 70vh;
+}
+
+.contact__left {
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.contact__heading {
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--white);
+  text-transform: uppercase;
+}
+
+.contact__right {
+  padding: 6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.contact__intro {
+  font-size: 1rem;
+  color: var(--gray-400);
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+
+.contact__email {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: clamp(1.1rem, 2.5vw, 1.8rem);
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  position: relative;
+  transition: opacity var(--transition-fast);
+}
+
+.contact__email::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--white);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--transition);
+}
+
+.contact__email:hover {
+  opacity: 0.7;
+}
+
+.contact__email:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+
+/* ============================================================
+   FOOTER — Industrial 4-column grid
+   ============================================================ */
+.footer {
+  padding: 4rem 4rem 2.5rem;
+}
+
+.footer__grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.footer__col {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer__logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  line-height: 1.1;
+  color: var(--white);
+  text-transform: uppercase;
+}
+
+.footer__tagline {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--gray-600);
+  margin-top: 0.8rem;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+.footer__col-label {
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  color: var(--gray-600);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.footer__link {
+  font-size: 0.8rem;
+  color: var(--gray-400);
+  margin-bottom: 0.6rem;
+  transition: color var(--transition-fast);
+  letter-spacing: 0.05em;
+}
+
+.footer__link:hover {
+  color: var(--white);
+}
+
+.footer__socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.footer__social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--gray-400);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  transition: all var(--transition-fast);
+}
+
+.footer__social:hover {
+  background: var(--white);
+  color: var(--black);
+  border-color: var(--white);
+}
+
+.footer__col--copy {
+  justify-content: flex-end;
+  align-self: end;
+  text-align: right;
+}
+
+.footer__copy {
+  font-size: 0.5rem;
+  color: var(--gray-600);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  line-height: 1.8;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .nav {
+    padding: 1.2rem 1.5rem;
+  }
+
+  .nav--scrolled {
+    padding: 0.8rem 1.5rem;
+  }
+
+  .projects__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project:nth-child(1) .project__media,
+  .project:nth-child(5) .project__media,
+  .project:nth-child(7) .project__media {
+    aspect-ratio: 16 / 9;
+  }
+
+  .project:nth-child(1) .project__title {
+    font-size: 2rem;
+  }
+
+  .project:nth-child(5) .project__title {
+    font-size: 1.8rem;
+  }
+
+  .project__overlay {
+    padding: 1.5rem;
+  }
+
+  .project__detail {
+    padding: 2rem 1.5rem;
+  }
+
+  .about {
+    padding: 5rem 1.5rem;
+  }
+
+  .about__bio {
+    font-size: 1.1rem;
+  }
+
+  .about__bio strong {
+    font-size: 1.2rem;
+  }
+
+  .about__stats {
+    gap: 2.5rem;
+  }
+
+  .stat__number {
+    font-size: 3rem;
+  }
+
+  .contact {
+    padding: 0;
+  }
+
+  .contact__grid {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .contact__header {
+    padding: 3rem 1.5rem 0;
+  }
+
+  .contact__left {
+    padding: 4rem 1.5rem 2rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .contact__heading {
+    font-size: 3rem;
+  }
+
+  .contact__right {
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .footer {
+    padding: 3rem 1.5rem 2rem;
+  }
+
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .footer__col--copy {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  .section-title {
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about__stats {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .footer__grid {
+    grid-template-columns: 1fr;
+  }
+}
