@@ -142,23 +142,31 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Detect touch device ---
   const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-  // --- Mobile: auto-play videos on scroll into view ---
+  // --- Mobile: only play video in center 33% of screen ---
   if (isTouchDevice) {
+    // rootMargin: crop top 33% and bottom 33%, leaving only center 33% as active zone
     const mobileObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        const video = entry.target.querySelector('.project__video');
+        const project = entry.target;
+        const video = project.querySelector('.project__video');
         if (!video) return;
+
         if (entry.isIntersecting) {
+          project.classList.add('mobile-active');
           video.muted = true;
           video.play().catch(() => { });
         } else {
+          project.classList.remove('mobile-active');
           // Only pause if not in detail-open mode
-          if (!entry.target.classList.contains('detail-open')) {
+          if (!project.classList.contains('detail-open')) {
             video.pause();
           }
         }
       });
-    }, { threshold: 0.3 });
+    }, {
+      threshold: 0.1,
+      rootMargin: '-33% 0px -33% 0px'
+    });
 
     document.querySelectorAll('.project').forEach(p => mobileObserver.observe(p));
   }

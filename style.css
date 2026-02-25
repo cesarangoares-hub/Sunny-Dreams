@@ -740,17 +740,22 @@ iframe {
     padding: 2rem 1.5rem;
   }
 
-  /* --- Mobile / Touch: show videos & titles without hover --- */
+  /* --- Mobile / Touch: mimic hover via scroll position --- */
   .project {
     cursor: default;
   }
 
-  .project__video {
+  /* Active project in center of screen: show in color + overlay */
+  .project.mobile-active .project__video {
     filter: grayscale(0);
   }
 
-  .project__overlay {
+  .project.mobile-active .project__overlay {
     opacity: 1;
+  }
+
+  .project.detail-open .project__overlay {
+    opacity: 0 !important;
   }
 
   .about {
