@@ -144,8 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Mobile: only play video in center 33% of screen ---
   if (isTouchDevice) {
-    // rootMargin: crop top 33% and bottom 33%, leaving only center 33% as active zone
-    const mobileObserver = new IntersectionObserver((entries) => {
+    // Shared callback for both observers
+    function handleMobileIntersect(entries) {
       entries.forEach(entry => {
         const project = entry.target;
         const video = project.querySelector('.project__video');
@@ -157,18 +157,32 @@ document.addEventListener('DOMContentLoaded', () => {
           video.play().catch(() => { });
         } else {
           project.classList.remove('mobile-active');
-          // Only pause if not in detail-open mode
           if (!project.classList.contains('detail-open')) {
             video.pause();
           }
         }
       });
-    }, {
+    }
+
+    // Center 33% observer for most projects
+    const centerObserver = new IntersectionObserver(handleMobileIntersect, {
       threshold: 0.1,
       rootMargin: '-33% 0px -33% 0px'
     });
 
-    document.querySelectorAll('.project').forEach(p => mobileObserver.observe(p));
+    // First project: activate whenever visible on screen, deactivate when off-screen
+    const firstObserver = new IntersectionObserver(handleMobileIntersect, {
+      threshold: 0.1
+    });
+
+    const allProjects = document.querySelectorAll('.project');
+    allProjects.forEach((p, i) => {
+      if (i === 0) {
+        firstObserver.observe(p);
+      } else {
+        centerObserver.observe(p);
+      }
+    });
   }
 
   // --- Project Detail Panel & Video Hybrid Audio Logic ---
