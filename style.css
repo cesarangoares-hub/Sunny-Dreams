@@ -724,12 +724,22 @@ iframe {
     aspect-ratio: 16 / 9;
   }
 
-  .project:nth-child(1) .project__title {
-    font-size: 2rem;
+  .project__title {
+    font-size: 1rem;
   }
 
-  .project:nth-child(5) .project__title {
-    font-size: 1.8rem;
+  .project:nth-child(1) .project__title,
+  .project:nth-child(4) .project__title,
+  .project:nth-child(7) .project__title {
+    font-size: 1.3rem;
+  }
+
+  .project__detail-title {
+    font-size: 1.1rem;
+  }
+
+  .project__detail-desc {
+    font-size: 0.75rem;
   }
 
   .project__overlay {
@@ -763,11 +773,11 @@ iframe {
   }
 
   .about__bio {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
   }
 
   .about__bio strong {
-    font-size: 1.2rem;
+    font-size: 1.05rem;
   }
 
   .about__stats {
@@ -775,7 +785,7 @@ iframe {
   }
 
   .stat__number {
-    font-size: 3rem;
+    font-size: 2.4rem;
   }
 
   .contact {
@@ -798,11 +808,19 @@ iframe {
   }
 
   .contact__heading {
-    font-size: 3rem;
+    font-size: 2.2rem;
   }
 
   .contact__right {
     padding: 2rem 1.5rem 4rem;
+  }
+
+  .contact__email {
+    font-size: 1rem;
+  }
+
+  .contact__intro {
+    font-size: 0.85rem;
   }
 
   .footer {
@@ -817,6 +835,10 @@ iframe {
   .footer__col--copy {
     grid-column: 1 / -1;
     text-align: left;
+  }
+
+  .footer__logo {
+    font-size: 1.1rem;
   }
 
   .section-title {
