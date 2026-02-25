@@ -142,10 +142,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Detect touch device ---
   const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-  // --- Mobile: only play video in center 33% of screen ---
+  // --- Mobile: play video in top 10%-43% zone of screen ---
   if (isTouchDevice) {
-    // Shared callback for both observers
-    function handleMobileIntersect(entries) {
+    // rootMargin: -10% top, -57% bottom → active zone is 10% to 43% from top
+    const mobileObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const project = entry.target;
         const video = project.querySelector('.project__video');
@@ -162,27 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
       });
-    }
-
-    // Center 33% observer for most projects
-    const centerObserver = new IntersectionObserver(handleMobileIntersect, {
+    }, {
       threshold: 0.1,
-      rootMargin: '-33% 0px -33% 0px'
+      rootMargin: '-10% 0px -57% 0px'
     });
 
-    // First project: activate whenever visible on screen, deactivate when off-screen
-    const firstObserver = new IntersectionObserver(handleMobileIntersect, {
-      threshold: 0.1
-    });
-
-    const allProjects = document.querySelectorAll('.project');
-    allProjects.forEach((p, i) => {
-      if (i === 0) {
-        firstObserver.observe(p);
-      } else {
-        centerObserver.observe(p);
-      }
-    });
+    document.querySelectorAll('.project').forEach(p => mobileObserver.observe(p));
   }
 
   // --- Project Detail Panel & Video Hybrid Audio Logic ---
