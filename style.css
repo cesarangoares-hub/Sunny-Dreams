@@ -706,6 +706,13 @@ iframe {
    RESPONSIVE
    ============================================================ */
 @media (max-width: 768px) {
+  /* Remove scroll reveal effect on mobile to prevent black strips */
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
   .nav {
     padding: 1.2rem 1.5rem;
   }
