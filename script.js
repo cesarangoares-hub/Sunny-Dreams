@@ -156,22 +156,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Mobile: play video in top 10%-43% zone of screen ---
   if (isTouchDevice) {
+    // Force all videos to preload and play immediately on mobile to prevent black spaces on iOS
+    document.querySelectorAll('.project__video').forEach(video => {
+      video.setAttribute('preload', 'auto');
+      video.muted = true;
+      video.play().catch(() => { });
+
+      // Force iOS to render the first frame just in case
+      video.addEventListener('loadedmetadata', () => {
+        if (video.currentTime === 0) {
+          video.currentTime = 0.01;
+        }
+      }, { once: true });
+    });
+
     // rootMargin: -10% top, -57% bottom → active zone is 10% to 43% from top
     const mobileObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const project = entry.target;
-        const video = project.querySelector('.project__video');
-        if (!video) return;
-
         if (entry.isIntersecting) {
           project.classList.add('mobile-active');
-          video.muted = true;
-          video.play().catch(() => { });
         } else {
           project.classList.remove('mobile-active');
-          if (!project.classList.contains('detail-open')) {
-            video.pause();
-          }
         }
       });
     }, {
