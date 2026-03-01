@@ -156,11 +156,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Mobile: play video in top 10%-43% zone of screen ---
   if (isTouchDevice) {
-    // Force all videos to preload and play immediately on mobile to prevent black spaces on iOS
+    // Force all videos to preload and render first frame immediately on mobile to prevent black spaces on iOS
     document.querySelectorAll('.project__video').forEach(video => {
       video.setAttribute('preload', 'auto');
       video.muted = true;
-      video.play().catch(() => { });
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          // Si no está en la zona activa al inicio, pausar inmediatamente tras el arranque forzado
+          if (!video.closest('.project').classList.contains('mobile-active')) {
+            video.pause();
+          }
+        }).catch(() => { });
+      }
 
       // Force iOS to render the first frame just in case
       video.addEventListener('loadedmetadata', () => {
@@ -174,10 +182,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const project = entry.target;
+        const video = project.querySelector('.project__video');
+        if (!video) return;
+
         if (entry.isIntersecting) {
           project.classList.add('mobile-active');
+          if (!project.classList.contains('detail-open')) {
+            video.muted = true;
+          }
+          video.play().catch(() => { });
         } else {
           project.classList.remove('mobile-active');
+          project.classList.remove('detail-open');
+          const detail = project.querySelector('.project__detail');
+          if (detail) detail.classList.remove('active');
+          video.muted = true;
+          video.pause();
         }
       });
     }, {
@@ -403,6 +423,10 @@ document.addEventListener('DOMContentLoaded', () => {
           stopProgressLoop();
           if (video) {
             video.muted = true;
+            // Solo pausar si NO está en la zona activa móvil o si estamos en escritorio
+            if (!isTouchDevice || !project.classList.contains('mobile-active')) {
+              video.pause();
+            }
           }
         }
       }
