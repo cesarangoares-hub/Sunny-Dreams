@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         revealObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  }, { threshold: 0.05, rootMargin: '100px 0px 800px 0px' });
 
   reveals.forEach(el => revealObserver.observe(el));
 
@@ -213,6 +213,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    let uiTimeout = null;
+    function startAutoHide() {
+      if (!isTouchDevice) return;
+      clearTimeout(uiTimeout);
+      uiTimeout = setTimeout(() => {
+        if (detail && detail.classList.contains('active')) {
+          detail.classList.remove('active');
+        }
+      }, 3000);
+    }
+
     // Set duration text when metadata loads
     if (video && endTimeEl) {
       video.addEventListener('loadedmetadata', () => {
@@ -258,6 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
         isSeeking = true;
         seekToPosition(e);
+        if (isTouchDevice) clearTimeout(uiTimeout);
       }, { passive: false });
 
       document.addEventListener('touchmove', (e) => {
@@ -267,6 +279,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }, { passive: true });
 
       document.addEventListener('touchend', () => {
+        if (isSeeking && isTouchDevice) {
+          startAutoHide();
+        }
         isSeeking = false;
       });
 
@@ -323,8 +338,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Click: Restart, Unmute, and activate project
     project.addEventListener('click', (e) => {
       // Ignore clicks on the playback bar area or detail text
-      if (playbackBar && playbackBar.contains(e.target)) return;
-      if (detail.contains(e.target)) return;
+      if (playbackBar && playbackBar.contains(e.target)) {
+        startAutoHide();
+        return;
+      }
+      if (detail.contains(e.target)) {
+        startAutoHide();
+        return;
+      }
 
       const isOpen = project.classList.contains('detail-open');
 
@@ -353,12 +374,18 @@ document.addEventListener('DOMContentLoaded', () => {
           video.play();
           startProgressLoop();
         }
+        startAutoHide();
       } else {
-        detail.classList.remove('active');
-        project.classList.remove('detail-open');
-        stopProgressLoop();
-        if (video) {
-          video.muted = true;
+        if (isTouchDevice && !detail.classList.contains('active')) {
+          detail.classList.add('active');
+          startAutoHide();
+        } else {
+          detail.classList.remove('active');
+          project.classList.remove('detail-open');
+          stopProgressLoop();
+          if (video) {
+            video.muted = true;
+          }
         }
       }
     });
