@@ -42,6 +42,9 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  // --- Detect touch device ---
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
   // --- Scroll Reveal ---
   const reveals = document.querySelectorAll('.reveal');
 
@@ -151,8 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return bar;
   }
 
-  // --- Detect touch device ---
-  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
 
   // --- Mobile: play video in top 10%-43% zone of screen ---
   if (isTouchDevice) {
