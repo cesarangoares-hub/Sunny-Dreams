@@ -44,18 +44,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Scroll Reveal ---
   const reveals = document.querySelectorAll('.reveal');
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => {
-          entry.target.classList.add('revealed');
-        }, index * 80);
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.05, rootMargin: '100px 0px 800px 0px' });
 
-  reveals.forEach(el => revealObserver.observe(el));
+  if (window.innerWidth <= 768 || isTouchDevice) {
+    // Disable reveal effect entirely on mobile
+    reveals.forEach(el => {
+      el.classList.add('revealed');
+      el.classList.remove('reveal');
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      el.style.transition = 'none';
+    });
+  } else {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('revealed');
+          }, index * 80);
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '100px 0px 800px 0px' });
+
+    reveals.forEach(el => revealObserver.observe(el));
+  }
 
   // --- Navbar scroll effect ---
   const nav = document.getElementById('nav');
