@@ -604,6 +604,21 @@ iframe {
   transform-origin: left;
 }
 
+.contact__social {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: clamp(0.9rem, 1.8vw, 1.3rem);
+  font-weight: 400;
+  color: var(--gray-400);
+  letter-spacing: 0.05em;
+  margin-top: 1rem;
+  transition: color var(--transition-fast);
+}
+
+.contact__social:hover {
+  color: var(--white);
+}
+
 
 /* ============================================================
    FOOTER — Industrial 4-column grid
@@ -706,6 +721,7 @@ iframe {
    RESPONSIVE
    ============================================================ */
 @media (max-width: 768px) {
+
   /* Remove scroll reveal effect on mobile to prevent black strips */
   .reveal {
     opacity: 1 !important;
